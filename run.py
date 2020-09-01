@@ -3,4 +3,6 @@
 from testsuite import params
 
 tests = params()
-print(tests)
+for pipeline in tests:
+    for test in tests['pipeline']:
+        print(test)
