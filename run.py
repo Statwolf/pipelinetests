@@ -25,6 +25,9 @@ for pipelineName in tests:
         pipeline = exports[pipelineName]()
 
         try:
+            if 'before' in info:
+                info['before']()
+
             res = pipeline.execute(params=info['params'])
 
             if 'check' in info:
@@ -38,6 +41,9 @@ for pipelineName in tests:
             print('Test failed!')
             track = traceback.format_exc()
             print(track)
+        finally:
+            if 'after' in info:
+                info['after']()
 
         print(' ')
 
