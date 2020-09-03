@@ -37,12 +37,15 @@ for pipelineName in tests:
             if 'before' in info:
                 info['before']()
 
+            res = None
+            error = None
+            
             try:
                 res = pipeline.execute(params=info['params'])
             except Exception as e:
-                info['check'](None, e)
+                error = e
 
-            info['check'](res, None)
+            info['check'](res, error)
 
             passed = passed + 1
         except Exception as e:
