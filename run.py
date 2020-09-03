@@ -12,6 +12,12 @@ passed = 0;
 
 failedList = []
 
+def defaultCheck(data, error):
+    if error == None:
+        return
+    
+    raise error
+
 for pipelineName in tests:
     print('* Running test suite for ' + pipelineName + ' pipeline\n')
 
@@ -21,17 +27,22 @@ for pipelineName in tests:
         if not 'name' in info:
             info['name'] = 'anonymous test'
 
+        if not 'check' in info:
+            info['check'] = defaultCheck
+        
         print('Running test: ' + info['name'])
         pipeline = exports[pipelineName]()
-
+        
         try:
             if 'before' in info:
                 info['before']()
 
-            res = pipeline.execute(params=info['params'])
+            try:
+                res = pipeline.execute(params=info['params'])
+            except Exception as e:
+                info['check'](None, e)
 
-            if 'check' in info:
-                info['check'](res)
+            info['check'](res, None)
 
             passed = passed + 1
         except Exception as e:
