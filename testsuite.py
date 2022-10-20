@@ -1,7 +1,7 @@
 def params():
-    ts = {};
+    ts = {}
 
-    ts['fake'] = [];
+    ts['fake'] = []
 
     ts['fake'].append({
         'name': 'My fake test',

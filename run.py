@@ -1,18 +1,24 @@
 #!/usr/bin/env python3
 
-from testsuite import params
+#from testsuite import params ## FIXME keep this
+from pipeline.testsuite import params # FIXME
+
 from pipeline import exports
 import traceback
+import inspect
 
 tests = params()
 
-total = 0;
-failed = 0;
-passed = 0;
+total = 0
+failed = 0
+passed = 0
 
 failedList = []
 
-def defaultCheck(data, error):
+def defaultCheck(data):
+    return
+
+def defaultRaises(error):
     if error == None:
         return
     
@@ -29,9 +35,18 @@ for pipelineName in tests:
 
         if not 'check' in info:
             info['check'] = defaultCheck
+
+        if not 'raises' in info:
+            info['raises'] = defaultRaises
         
+        print('')
+        print('---------------------------------------------------------')
         print('Running test: ' + info['name'])
-        pipeline = exports[pipelineName]()
+        pipeline = exports[pipelineName](
+            datasource=info['datasource'] if 'datasource' in info else None, 
+            log=info['log'] if 'log' in info else None, 
+            verbose=False
+        )
         
         try:
             if 'before' in info:
@@ -45,7 +60,16 @@ for pipelineName in tests:
             except Exception as e:
                 error = e
 
-            info['check'](res, error)
+            if inspect.isclass(info['raises']) == False:
+                info['raises'](error)  
+            else: 
+                if type(error) != info['raises']: 
+                    if error is None:
+                        raise Exception('did\'t raises exception: {}'.format(info['raises']))
+
+                    raise Exception('did\'t raises expected exception: but {} instead of {}'.format(type(error), info['raises']))
+                
+            info['check'](res)
 
             passed = passed + 1
         except Exception as e:
@@ -69,4 +93,3 @@ print(str(passed) + ' passed')
 print(str(failed) + ' failed')
 for name in failedList:
     print(' >> ' + name)
-
