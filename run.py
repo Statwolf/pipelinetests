@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 from testsuite import params
-
 from pipeline import exports
 import traceback
 import inspect

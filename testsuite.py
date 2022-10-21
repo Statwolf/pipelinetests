@@ -28,5 +28,4 @@ def params():
         }
     })
 
-
     return ts
