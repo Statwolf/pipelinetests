@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
-#from testsuite import params ## FIXME keep this
-from pipeline.testsuite import params # FIXME
+from testsuite import params
 
 from pipeline import exports
 import traceback
