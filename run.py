@@ -43,7 +43,7 @@ for pipelineName in tests:
         pipeline = exports[pipelineName](
             datasource=info['datasource'] if 'datasource' in info else None, 
             log=info['log'] if 'log' in info else None, 
-            verbose=False
+            verbose=info['verbose'] if 'verbose' in info else False
         )
         
         try:
